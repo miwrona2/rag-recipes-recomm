@@ -9,7 +9,6 @@ async def test_generate_recipes_valid_payload(async_client: AsyncClient):
         "mealType": "obiad",
         "excludeUrls": ["https://example.com/recipe/1"],
         "limit": 3,
-        "availableIngredients": ["kurczak", "makaron", "czosnek"],
     }
     response = await async_client.post("/api/v1/recipes/generate", json=payload)
     assert response.status_code == 200

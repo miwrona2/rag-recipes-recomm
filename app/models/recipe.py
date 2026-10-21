@@ -27,20 +27,6 @@ class RecipeGenerationRequest(BaseModel):
         description="Maximum number of recipe recommendations to generate",
         examples=[3],
     )
-    availableIngredients: Optional[List[str]] = Field(
-        default=None,
-        description="Optional list of ingredients available in the fridge",
-        examples=[["chicken breast", "garlic", "olive oil"]],
-    )
-    dietaryRestrictions: Optional[List[str]] = Field(
-        default=None,
-        description="Optional dietary restrictions (e.g. 'vegetarian', 'gluten-free')",
-        examples=[["gluten-free"]],
-    )
-    userPreferences: Optional[Dict[str, Any]] = Field(
-        default=None,
-        description="Optional additional user preference settings",
-    )
 
 
 class RecipeCandidate(BaseModel):
