@@ -5,6 +5,10 @@ from app.services.vector_search import (
     search_recipes_in_vector_db,
     retrieve_candidates,
 )
+from app.services.candidate_filter import (
+    generate_synthetic_recipe_url,
+    filter_excluded_candidates,
+)
 
 __all__ = [
     "RecipeService",
@@ -13,4 +17,6 @@ __all__ = [
     "get_supabase_client",
     "search_recipes_in_vector_db",
     "retrieve_candidates",
+    "generate_synthetic_recipe_url",
+    "filter_excluded_candidates",
 ]

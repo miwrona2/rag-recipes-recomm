@@ -9,6 +9,7 @@ from app.models.recipe import (
     GenerationTrace,
 )
 from app.services.vector_search import retrieve_candidates
+from app.services.candidate_filter import filter_excluded_candidates
 
 
 class RecipeService:
@@ -19,21 +20,25 @@ class RecipeService:
         settings: Settings,
         search_fn: Optional[Callable[..., Any]] = None,
         embedding_fn: Optional[Callable[..., Any]] = None,
+        filter_fn: Optional[Callable[..., Any]] = None,
     ):
         self.settings = settings
         self.search_fn = search_fn
         self.embedding_fn = embedding_fn
+        self.filter_fn = filter_fn
 
     async def generate_recipes(
         self,
         request: RecipeGenerationRequest,
         search_fn: Optional[Callable[..., Any]] = None,
         embedding_fn: Optional[Callable[..., Any]] = None,
+        filter_fn: Optional[Callable[..., Any]] = None,
     ) -> RecipeGenerationResponse:
         """
         Execute RAG recipe recommendation pipeline.
         Step 1 (Subtask 2): Candidate retrieval from vector database.
-        Subsequent subtasks will integrate filtering, prompting, LLM call, and response assembly.
+        Step 2 (Subtask 3): Filtering excluded candidates.
+        Subsequent subtasks will integrate prompting, LLM call, and response assembly.
         """
         start_time = time.time()
         logger.info(
@@ -42,6 +47,7 @@ class RecipeService:
 
         effective_search_fn = search_fn or self.search_fn
         effective_embedding_fn = embedding_fn or self.embedding_fn
+        effective_filter_fn = filter_fn or self.filter_fn or filter_excluded_candidates
 
         retrieved_candidates = []
         # If custom search_fn is provided OR Supabase & OpenAI are configured, retrieve candidates
@@ -61,17 +67,23 @@ class RecipeService:
                 logger.error(f"Błąd podczas pobierania kandydatów: {e}")
                 retrieved_candidates = []
 
+        # Step 2: Filter excluded candidates
+        filtered_candidates = effective_filter_fn(
+            retrieved_candidates,
+            exclude_urls=request.excludeUrls,
+        )
+
         recipes: List[RecipeCandidate] = []
         execution_time_ms = (time.time() - start_time) * 1000
 
         trace = GenerationTrace(
             retrievedCandidatesCount=len(retrieved_candidates),
-            filteredCandidatesCount=0,
+            filteredCandidatesCount=len(filtered_candidates),
             llmModelUsed=self.settings.OPENAI_MODEL,
             executionTimeMs=round(execution_time_ms, 2),
             additionalMetadata={
-                "status": "candidates_retrieved" if retrieved_candidates else "initialized",
-                "subtask": 2,
+                "status": "candidates_filtered" if filtered_candidates else ("candidates_retrieved" if retrieved_candidates else "initialized"),
+                "subtask": 3,
             },
         )
 

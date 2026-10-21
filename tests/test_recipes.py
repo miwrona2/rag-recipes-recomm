@@ -73,7 +73,8 @@ async def test_generate_recipes_with_service_override(app: FastAPI, async_client
     from app.core.config import Settings
 
     mock_search = AsyncMock(return_value=[
-        {"id": "1", "title": "Testowa potrawa", "similarity": 0.9}
+        {"id": "1", "title": "Testowa potrawa", "similarity": 0.9, "url": "https://example.com/recipe/1"},
+        {"id": "2", "title": "Pyszne spaghetti", "similarity": 0.85, "url": "https://example.com/recipe/2"},
     ])
     test_service = RecipeService(
         settings=Settings(OPENAI_API_KEY="test", SUPABASE_URL="https://test.supabase.co", SUPABASE_KEY="test"),
@@ -82,15 +83,30 @@ async def test_generate_recipes_with_service_override(app: FastAPI, async_client
 
     app.dependency_overrides[get_recipe_service] = lambda: test_service
     try:
+        # Case 1: Exclude recipe 1
         payload = {
             "mood": "szybki",
             "mealType": "obiad",
+            "excludeUrls": ["https://example.com/recipe/1"],
             "limit": 2,
         }
         response = await async_client.post("/api/v1/recipes/generate", json=payload)
         assert response.status_code == 200
         data = response.json()
-        assert data["trace"]["retrievedCandidatesCount"] == 1
-        assert data["trace"]["additionalMetadata"]["subtask"] == 2
+        assert data["trace"]["retrievedCandidatesCount"] == 2
+        assert data["trace"]["filteredCandidatesCount"] == 1
+        assert data["trace"]["additionalMetadata"]["subtask"] == 3
+
+        # Case 2: No exclusion
+        payload_no_exclude = {
+            "mood": "szybki",
+            "mealType": "obiad",
+            "limit": 2,
+        }
+        response_no_exclude = await async_client.post("/api/v1/recipes/generate", json=payload_no_exclude)
+        assert response_no_exclude.status_code == 200
+        data_no_exclude = response_no_exclude.json()
+        assert data_no_exclude["trace"]["retrievedCandidatesCount"] == 2
+        assert data_no_exclude["trace"]["filteredCandidatesCount"] == 2
     finally:
         app.dependency_overrides.clear()

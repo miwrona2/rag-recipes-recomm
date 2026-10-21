@@ -173,5 +173,6 @@ async def test_recipe_service_retrieval_integration():
 
     assert response.trace is not None
     assert response.trace.retrievedCandidatesCount == 2
-    assert response.trace.additionalMetadata["subtask"] == 2
-    assert response.trace.additionalMetadata["status"] == "candidates_retrieved"
+    assert response.trace.filteredCandidatesCount == 2
+    assert response.trace.additionalMetadata["subtask"] == 3
+    assert response.trace.additionalMetadata["status"] == "candidates_filtered"
