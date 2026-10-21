@@ -80,8 +80,7 @@ Po uruchomieniu serwera interaktywna dokumentacja OpenAPI / Swagger UI jest dost
   "mood": "szybki i pożywny",
   "mealType": "obiad",
   "excludeUrls": ["https://example.com/recipe/1"],
-  "limit": 3,
-  "availableIngredients": ["kurczak", "czosnek", "oliwa"]
+  "limit": 3
 }
 ```
 - **Response `200 OK`:**
