@@ -1,19 +1,19 @@
 # RAG Recipe Recommendation Microservice
 
-Mikroserwis rekomendacji przepisów kulinarnych oparty na Pythonie i frameworku **FastAPI**. Serwis stanowi kluczowy komponent architektury RAG (Retrieval-Augmented Generation), odpowiadając za wyszukiwanie kandydatów, filtrowanie, budowanie kontekstu promptu oraz syntezę przepisów.
+A culinary recipe recommendation microservice built with Python and the **FastAPI** framework. The service is a core component of the RAG (Retrieval-Augmented Generation) architecture, responsible for candidate retrieval, filtering, prompt context assembly, and recipe synthesis.
 
 ---
 
-## 🛠 Wymagania
+## 🛠 Requirements
 
 - **Python:** `>= 3.10`
-- **Wirtualne środowisko:** `venv`
+- **Virtual environment:** `venv`
 
 ---
 
-## 🚀 Instalacja i Uruchomienie
+## 🚀 Getting Started
 
-### 1. Inicjalizacja środowiska wirtualnego
+### 1. Initialize virtual environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -21,47 +21,47 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 2. Konfiguracja zmiennych środowiskowych
-Skopiuj plik `.env.example` do `.env` i uzupełnij klucze:
+### 2. Configure environment variables
+Copy the `.env.example` file to `.env` and fill in the required keys:
 ```bash
 cp .env.example .env
 ```
 
-Zmienne konfiguracyjne:
-- `HOST`: Adres hosta (domyślnie `0.0.0.0`)
-- `PORT`: Port serwera (domyślnie `8000`)
-- `ENVIRONMENT`: Środowisko (`development` / `production`)
-- `LOG_LEVEL`: Poziom logowania (`INFO`, `DEBUG`, `WARNING`)
-- `OPENAI_API_KEY`: Klucz API do OpenAI
-- `OPENAI_MODEL`: Model LLM (domyślnie `gpt-4o-mini`)
-- `OPENAI_EMBEDDING_MODEL`: Model embeddingów (domyślnie `text-embedding-3-small`)
-- `SUPABASE_URL`: Adres instancji Supabase
-- `SUPABASE_KEY`: Klucz dostępu Supabase
+Configuration variables:
+- `HOST`: Host address (default: `0.0.0.0`)
+- `PORT`: Server port (default: `8000`)
+- `ENVIRONMENT`: Environment mode (`development` / `production`)
+- `LOG_LEVEL`: Logging level (`INFO`, `DEBUG`, `WARNING`)
+- `OPENAI_API_KEY`: OpenAI API key
+- `OPENAI_MODEL`: LLM model (default: `gpt-4o-mini`)
+- `OPENAI_EMBEDDING_MODEL`: Embedding model (default: `text-embedding-3-small`)
+- `SUPABASE_URL`: Supabase instance URL
+- `SUPABASE_KEY`: Supabase access key
 
-### 3. Uruchomienie serwera deweloperskiego
+### 3. Run development server
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-lub
+or
 ```bash
 python run.py
 ```
 
 ---
 
-## 📖 Dokumentacja API
+## 📖 API Documentation
 
-Po uruchomieniu serwera interaktywna dokumentacja OpenAPI / Swagger UI jest dostępna pod adresem:
+Once the server is running, interactive OpenAPI / Swagger UI documentation is available at:
 - **Swagger UI:** [http://localhost:8000/api/v1/docs](http://localhost:8000/api/v1/docs)
 - **ReDoc:** [http://localhost:8000/api/v1/redoc](http://localhost:8000/api/v1/redoc)
 - **OpenAPI JSON:** [http://localhost:8000/api/v1/openapi.json](http://localhost:8000/api/v1/openapi.json)
 
 ---
 
-## 📌 Endpointy
+## 📌 Endpoints
 
 ### 1. Healthcheck
-- `GET /health` oraz `GET /api/v1/health`
+- `GET /health` and `GET /api/v1/health`
 - **Status:** `200 OK`
 ```json
 {
@@ -72,13 +72,13 @@ Po uruchomieniu serwera interaktywna dokumentacja OpenAPI / Swagger UI jest dost
 }
 ```
 
-### 2. Generowanie rekomendacji przepisów
+### 2. Generate Recipe Recommendations
 - `POST /api/v1/recipes/generate`
 - **Request Body:**
 ```json
 {
-  "mood": "szybki i pożywny",
-  "mealType": "obiad",
+  "mood": "quick and nutritious",
+  "mealType": "dinner",
   "excludeUrls": ["https://example.com/recipe/1"],
   "limit": 3
 }
@@ -99,14 +99,14 @@ Po uruchomieniu serwera interaktywna dokumentacja OpenAPI / Swagger UI jest dost
   }
 }
 ```
-- **Błąd walidacji `422 Unprocessable Entity`:**
-Zwracany automatycznie w przypadku braku wymaganych pól (`mood`, `mealType`) lub niepoprawnych wartości parametrów (`limit` < 1).
+- **Validation Error `422 Unprocessable Entity`:**
+Returned automatically when required fields (`mood`, `mealType`) are missing or parameter values are invalid (`limit` < 1).
 
 ---
 
-## 🧪 Testy
+## 🧪 Testing
 
-Uruchomienie zestawu testów jednostkowych i integracyjnych:
+Run unit and integration test suite:
 ```bash
 pytest -v
 ```
