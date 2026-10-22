@@ -18,6 +18,10 @@ from app.services.prompt_builder import (
     RagPrompts,
 )
 from app.services.llm_service import execute_llm_call
+from app.services.recommendation_validator import (
+    validate_and_assemble_recommendations,
+    validateAndAssembleRecommendations,
+)
 
 __all__ = [
     "RecipeService",
@@ -33,4 +37,6 @@ __all__ = [
     "build_rag_prompts",
     "RagPrompts",
     "execute_llm_call",
+    "validate_and_assemble_recommendations",
+    "validateAndAssembleRecommendations",
 ]
