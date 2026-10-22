@@ -95,7 +95,8 @@ async def test_generate_recipes_with_service_override(app: FastAPI, async_client
         data = response.json()
         assert data["trace"]["retrievedCandidatesCount"] == 2
         assert data["trace"]["filteredCandidatesCount"] == 1
-        assert data["trace"]["additionalMetadata"]["subtask"] == 3
+        assert data["trace"]["additionalMetadata"]["subtask"] == 4
+        assert data["trace"]["additionalMetadata"]["promptCandidatesCount"] == 1
 
         # Case 2: No exclusion
         payload_no_exclude = {

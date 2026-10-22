@@ -9,6 +9,10 @@ from app.services.candidate_filter import (
     generate_synthetic_recipe_url,
     filter_excluded_candidates,
 )
+from app.services.prompt_context import (
+    prepare_prompt_context,
+    PromptContext,
+)
 
 __all__ = [
     "RecipeService",
@@ -19,4 +23,6 @@ __all__ = [
     "retrieve_candidates",
     "generate_synthetic_recipe_url",
     "filter_excluded_candidates",
+    "prepare_prompt_context",
+    "PromptContext",
 ]
