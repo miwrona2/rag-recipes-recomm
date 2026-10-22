@@ -17,6 +17,7 @@ from app.services.prompt_builder import (
     build_rag_prompts,
     RagPrompts,
 )
+from app.services.llm_service import execute_llm_call
 
 __all__ = [
     "RecipeService",
@@ -31,4 +32,5 @@ __all__ = [
     "PromptContext",
     "build_rag_prompts",
     "RagPrompts",
+    "execute_llm_call",
 ]

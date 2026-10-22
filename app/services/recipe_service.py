@@ -12,6 +12,7 @@ from app.services.vector_search import retrieve_candidates
 from app.services.candidate_filter import filter_excluded_candidates
 from app.services.prompt_context import prepare_prompt_context, PromptContext
 from app.services.prompt_builder import build_rag_prompts, RagPrompts
+from app.services.llm_service import execute_llm_call
 
 
 class RecipeService:
@@ -25,6 +26,7 @@ class RecipeService:
         filter_fn: Optional[Callable[..., Any]] = None,
         context_fn: Optional[Callable[..., Any]] = None,
         prompt_builder_fn: Optional[Callable[..., Any]] = None,
+        llm_fn: Optional[Callable[..., Any]] = None,
     ):
         self.settings = settings
         self.search_fn = search_fn
@@ -32,6 +34,7 @@ class RecipeService:
         self.filter_fn = filter_fn
         self.context_fn = context_fn
         self.prompt_builder_fn = prompt_builder_fn
+        self.llm_fn = llm_fn
 
     async def generate_recipes(
         self,
@@ -41,6 +44,7 @@ class RecipeService:
         filter_fn: Optional[Callable[..., Any]] = None,
         context_fn: Optional[Callable[..., Any]] = None,
         prompt_builder_fn: Optional[Callable[..., Any]] = None,
+        llm_fn: Optional[Callable[..., Any]] = None,
     ) -> RecipeGenerationResponse:
         """
         Execute RAG recipe recommendation pipeline.
@@ -48,7 +52,8 @@ class RecipeService:
         Step 2 (Subtask 3): Filtering excluded candidates.
         Step 3 (Subtask 4): Preparing concise prompt context and candidate lookup map.
         Step 4 (Subtask 5): Constructing system and user prompts for LLM.
-        Subsequent subtasks will integrate LLM call and response assembly.
+        Step 5 (Subtask 6): Executing LLM generation call.
+        Subsequent subtasks will integrate response validation and assembly.
         """
         start_time = time.time()
         logger.info(
@@ -60,6 +65,7 @@ class RecipeService:
         effective_filter_fn = filter_fn or self.filter_fn or filter_excluded_candidates
         effective_context_fn = context_fn or self.context_fn or prepare_prompt_context
         effective_prompt_builder_fn = prompt_builder_fn or self.prompt_builder_fn or build_rag_prompts
+        effective_llm_fn = llm_fn or self.llm_fn
 
         retrieved_candidates = []
         # If custom search_fn is provided OR Supabase & OpenAI are configured, retrieve candidates
@@ -99,6 +105,19 @@ class RecipeService:
             limit=request.limit,
         )
 
+        # Step 5: Generation - execute LLM call if candidates exist and llm_fn is configured
+        raw_llm_response = None
+        if effective_llm_fn and prompt_context.candidates_for_prompt:
+            try:
+                raw_llm_response = await effective_llm_fn(
+                    system_prompt=prompts.system_prompt,
+                    user_prompt=prompts.user_prompt,
+                    model=self.settings.OPENAI_MODEL,
+                )
+            except Exception as e:
+                logger.error(f"Błąd podczas wywołania LLM w RecipeService: {e}")
+                raw_llm_response = None
+
         recipes: List[RecipeCandidate] = []
         execution_time_ms = (time.time() - start_time) * 1000
 
@@ -108,11 +127,12 @@ class RecipeService:
             llmModelUsed=self.settings.OPENAI_MODEL,
             executionTimeMs=round(execution_time_ms, 2),
             additionalMetadata={
-                "status": "prompts_built" if prompt_context.candidates_for_prompt else ("context_prepared" if filtered_candidates else ("candidates_retrieved" if retrieved_candidates else "initialized")),
-                "subtask": 5,
+                "status": "llm_called" if raw_llm_response is not None else ("prompts_built" if prompt_context.candidates_for_prompt else ("context_prepared" if filtered_candidates else ("candidates_retrieved" if retrieved_candidates else "initialized"))),
+                "subtask": 6 if raw_llm_response is not None else 5,
                 "promptCandidatesCount": len(prompt_context.candidates_for_prompt),
                 "systemPromptLength": len(prompts.system_prompt) if prompts else 0,
                 "userPromptLength": len(prompts.user_prompt) if prompts else 0,
+                "rawLlmResponseLength": len(raw_llm_response) if raw_llm_response else 0,
             },
         )
 
