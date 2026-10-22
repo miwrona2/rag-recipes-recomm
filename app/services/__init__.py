@@ -13,6 +13,10 @@ from app.services.prompt_context import (
     prepare_prompt_context,
     PromptContext,
 )
+from app.services.prompt_builder import (
+    build_rag_prompts,
+    RagPrompts,
+)
 
 __all__ = [
     "RecipeService",
@@ -25,4 +29,6 @@ __all__ = [
     "filter_excluded_candidates",
     "prepare_prompt_context",
     "PromptContext",
+    "build_rag_prompts",
+    "RagPrompts",
 ]

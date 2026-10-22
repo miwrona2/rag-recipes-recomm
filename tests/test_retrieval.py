@@ -174,6 +174,8 @@ async def test_recipe_service_retrieval_integration():
     assert response.trace is not None
     assert response.trace.retrievedCandidatesCount == 2
     assert response.trace.filteredCandidatesCount == 2
-    assert response.trace.additionalMetadata["subtask"] == 4
-    assert response.trace.additionalMetadata["status"] == "context_prepared"
+    assert response.trace.additionalMetadata["subtask"] == 5
+    assert response.trace.additionalMetadata["status"] == "prompts_built"
     assert response.trace.additionalMetadata["promptCandidatesCount"] == 2
+    assert response.trace.additionalMetadata["systemPromptLength"] > 0
+    assert response.trace.additionalMetadata["userPromptLength"] > 0

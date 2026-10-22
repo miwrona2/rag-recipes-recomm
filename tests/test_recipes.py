@@ -95,8 +95,11 @@ async def test_generate_recipes_with_service_override(app: FastAPI, async_client
         data = response.json()
         assert data["trace"]["retrievedCandidatesCount"] == 2
         assert data["trace"]["filteredCandidatesCount"] == 1
-        assert data["trace"]["additionalMetadata"]["subtask"] == 4
+        assert data["trace"]["additionalMetadata"]["subtask"] == 5
         assert data["trace"]["additionalMetadata"]["promptCandidatesCount"] == 1
+        assert data["trace"]["additionalMetadata"]["systemPromptLength"] > 0
+        assert data["trace"]["additionalMetadata"]["userPromptLength"] > 0
+        assert data["trace"]["additionalMetadata"]["status"] == "prompts_built"
 
         # Case 2: No exclusion
         payload_no_exclude = {
@@ -109,5 +112,7 @@ async def test_generate_recipes_with_service_override(app: FastAPI, async_client
         data_no_exclude = response_no_exclude.json()
         assert data_no_exclude["trace"]["retrievedCandidatesCount"] == 2
         assert data_no_exclude["trace"]["filteredCandidatesCount"] == 2
+        assert data_no_exclude["trace"]["additionalMetadata"]["promptCandidatesCount"] == 2
+        assert data_no_exclude["trace"]["additionalMetadata"]["status"] == "prompts_built"
     finally:
         app.dependency_overrides.clear()
