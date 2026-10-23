@@ -42,7 +42,7 @@ class RecipeService:
         self.llm_fn = llm_fn
         self.validator_fn = validator_fn
 
-    async def generate_recipes(
+    async def generate_recipes_with_rag(
         self,
         request: RecipeGenerationRequest,
         search_fn: Optional[Callable[..., Any]] = None,
@@ -206,6 +206,9 @@ class RecipeService:
             recipes=recipes,
             trace=trace,
         )
+
+    # Alias for backward compatibility
+    generate_recipes = generate_recipes_with_rag
 
 
 def get_recipe_service() -> RecipeService:

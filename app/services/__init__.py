@@ -1,8 +1,6 @@
 from app.services.recipe_service import (
     RecipeService,
     get_recipe_service,
-    generate_recipes_with_rag,
-    generateRecipesWithRag,
 )
 from app.services.embedding_service import get_embedding
 from app.services.vector_search import (
@@ -31,8 +29,6 @@ from app.services.recommendation_validator import (
 __all__ = [
     "RecipeService",
     "get_recipe_service",
-    "generate_recipes_with_rag",
-    "generateRecipesWithRag",
     "get_embedding",
     "get_supabase_client",
     "search_recipes_in_vector_db",

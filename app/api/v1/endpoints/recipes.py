@@ -18,7 +18,7 @@ async def generate_recipes(
     recipe_service: RecipeService = Depends(get_recipe_service),
 ) -> RecipeGenerationResponse:
     try:
-        return await recipe_service.generate_recipes(payload)
+        return await recipe_service.generate_recipes_with_rag(payload)
     except ValueError as e:
         logger.warning(f"Validation error during recipe generation: {e}")
         raise HTTPException(
