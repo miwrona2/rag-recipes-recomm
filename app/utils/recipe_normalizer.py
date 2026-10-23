@@ -1,7 +1,6 @@
 """
 Helper functions for normalizing recipe ingredients and instructions/steps
 for the RAG recommendation pipeline.
-Mirrors the Node.js implementation in backend/utils/rag/recipeNormalizer.js.
 """
 import json
 import re

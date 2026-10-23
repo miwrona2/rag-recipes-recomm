@@ -29,7 +29,7 @@ PL_PATTERN = re.compile(r"[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]")
 def generate_synthetic_recipe_url(recipe: Optional[Union[Dict[str, Any], Any]]) -> str:
     """
     Generates a synthetic URL for a recipe based on recipe_id and title/name.
-    Matches the Node.js implementation: recipe://{recipe_id}/{title_slug} or recipe://{recipe_id}
+    Format: recipe://{recipe_id}/{title_slug} or recipe://{recipe_id}
 
     :param recipe: Recipe dictionary or object with id/recipe_id and title/name.
     :return: Synthetic recipe URL string, e.g. 'recipe://1042/kremowe-curry-z-ciecierzyca'.

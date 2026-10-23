@@ -106,7 +106,7 @@ async def search_recipes_in_vector_db(
 
     results: List[Dict[str, Any]] = response.data if response and response.data else []
 
-    # 4. Optional tag filtering (mood, mealType) matching Node.js implementation
+    # 4. Optional tag filtering (mood, mealType)
     if mood:
         target_mood = mood.lower()
 
@@ -153,7 +153,6 @@ async def retrieve_candidates(
 ) -> List[Dict[str, Any]]:
     """
     Step 1: Retrieval - fetches candidates from the vector database.
-    Equivalent of Node.js retrieveCandidates(mood, mealType, options).
 
     :param mood: User mood preference (e.g. 'zdrowe', 'szybkie', 'comfort-food').
     :param meal_type: User meal type (e.g. 'obiad', 'śniadanie', 'kolacja').

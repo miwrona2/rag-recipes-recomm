@@ -1,5 +1,8 @@
+"""
+Service and orchestrator module for the complete RAG recipe recommendation pipeline.
+"""
 import time
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 from app.core.config import Settings, get_settings
 from app.core.logging import logger
 from app.models.recipe import (
@@ -10,8 +13,8 @@ from app.models.recipe import (
 )
 from app.services.vector_search import retrieve_candidates
 from app.services.candidate_filter import filter_excluded_candidates
-from app.services.prompt_context import prepare_prompt_context, PromptContext
-from app.services.prompt_builder import build_rag_prompts, RagPrompts
+from app.services.prompt_context import prepare_prompt_context
+from app.services.prompt_builder import build_rag_prompts
 from app.services.llm_service import execute_llm_call
 from app.services.recommendation_validator import validate_and_assemble_recommendations
 
@@ -52,13 +55,12 @@ class RecipeService:
     ) -> RecipeGenerationResponse:
         """
         Execute RAG recipe recommendation pipeline.
-        Step 1 (Subtask 2): Candidate retrieval from vector database.
-        Step 2 (Subtask 3): Filtering excluded candidates.
-        Step 3 (Subtask 4): Preparing concise prompt context and candidate lookup map.
-        Step 4 (Subtask 5): Constructing system and user prompts for LLM.
-        Step 5 (Subtask 6): Executing LLM generation call.
-        Step 6 (Subtask 7): Validating and assembling recommendation objects.
-        Subsequent subtasks will integrate fallback handling.
+        Step 1: Candidate retrieval from vector database.
+        Step 2: Filtering excluded candidates.
+        Step 3: Preparing concise prompt context and candidate lookup map.
+        Step 4: Constructing system and user prompts for LLM.
+        Step 5: Executing LLM generation call.
+        Step 6: Validating and assembling recommendation objects.
         """
         start_time = time.time()
         logger.info(
@@ -74,7 +76,6 @@ class RecipeService:
         effective_validator_fn = validator_fn or self.validator_fn
 
         retrieved_candidates = []
-        # If custom search_fn is provided OR Supabase & OpenAI are configured, retrieve candidates
         if effective_search_fn or (
             self.settings.SUPABASE_URL and self.settings.SUPABASE_KEY and self.settings.OPENAI_API_KEY
         ):
@@ -88,7 +89,7 @@ class RecipeService:
                     embedding_fn=effective_embedding_fn,
                 )
             except Exception as e:
-                logger.error(f"Błąd podczas pobierania kandydatów: {e}")
+                logger.error(f"[RAG_RETRIEVAL_ERROR] Błąd podczas pobierania kandydatów: {e}")
                 retrieved_candidates = []
 
         # Step 2: Filter excluded candidates
@@ -114,14 +115,20 @@ class RecipeService:
         # Step 5: Generation - execute LLM call if candidates exist and llm_fn is configured
         raw_llm_response = None
         if effective_llm_fn and prompt_context.candidates_for_prompt:
+            logger.info(
+                f"Wysyłanie zapytania do OpenAI (model: {self.settings.OPENAI_MODEL}, mood: '{request.mood}', mealType: '{request.mealType}')..."
+            )
             try:
                 raw_llm_response = await effective_llm_fn(
                     system_prompt=prompts.system_prompt,
                     user_prompt=prompts.user_prompt,
                     model=self.settings.OPENAI_MODEL,
                 )
+                logger.info(
+                    f"Pomyślnie zrealizowano zapytanie do OpenAI (model: {self.settings.OPENAI_MODEL}, długość odpowiedzi: {len(raw_llm_response) if raw_llm_response else 0} znaków)."
+                )
             except Exception as e:
-                logger.error(f"Błąd podczas wywołania LLM w RecipeService: {e}")
+                logger.error(f"[OPENAI_LLM_ERROR] Błąd podczas wywołania LLM w RecipeService: {e}")
                 raw_llm_response = None
 
         # Step 6: Validation and Assembly
@@ -136,7 +143,7 @@ class RecipeService:
                     limit=request.limit,
                 )
             except Exception as e:
-                logger.error(f"Błąd podczas walidacji rekomendacji: {e}")
+                logger.error(f"[RAG_VALIDATION_ERROR] Błąd podczas walidacji rekomendacji: {e}")
                 validated_recipes = []
 
         recipes: List[RecipeCandidate] = []
@@ -204,5 +211,6 @@ class RecipeService:
 def get_recipe_service() -> RecipeService:
     return RecipeService(
         settings=get_settings(),
+        llm_fn=execute_llm_call,
         validator_fn=validate_and_assemble_recommendations,
     )

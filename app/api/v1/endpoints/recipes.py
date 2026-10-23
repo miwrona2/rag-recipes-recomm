@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from app.core.logging import logger
 from app.models.recipe import RecipeGenerationRequest, RecipeGenerationResponse
 from app.services.recipe_service import RecipeService, get_recipe_service
 
@@ -16,4 +17,17 @@ async def generate_recipes(
     payload: RecipeGenerationRequest,
     recipe_service: RecipeService = Depends(get_recipe_service),
 ) -> RecipeGenerationResponse:
-    return await recipe_service.generate_recipes(payload)
+    try:
+        return await recipe_service.generate_recipes(payload)
+    except ValueError as e:
+        logger.warning(f"Validation error during recipe generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
+    except Exception as e:
+        logger.error(f"Error during recipe generation pipeline: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Błąd podczas generowania rekomendacji RAG: {str(e)}",
+        )

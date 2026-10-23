@@ -66,6 +66,10 @@ async def execute_llm_call(
     if client is None:
         client = AsyncOpenAI(api_key=used_api_key)
 
+    logger.info(
+        f"Wysyłanie zapytania do OpenAI (model: {used_model}, system_prompt_len: {len(system_prompt)}, user_prompt_len: {len(user_prompt)})..."
+    )
+
     try:
         response = await client.chat.completions.create(
             model=used_model,
@@ -83,6 +87,10 @@ async def execute_llm_call(
         content = message.content if message else None
         if content is None:
             return "{}"
+
+        logger.info(
+            f"Otrzymano pomyślną odpowiedź z OpenAI (model: {used_model}, długość odpowiedzi: {len(content)} znaków)."
+        )
         return content
     except Exception as e:
         logger.error(f"[OPENAI_LLM_ERROR] Błąd podczas wywołania modelu LLM: {str(e)}")

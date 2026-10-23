@@ -36,7 +36,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
                 status_code=500,
                 content={
                     "error": "InternalServerError",
-                    "message": "An unexpected error occurred while processing the request.",
+                    "message": str(exc) if str(exc) else "An unexpected error occurred while processing the request.",
                     "request_id": request_id,
                 },
                 headers={
