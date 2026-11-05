@@ -1,0 +1,278 @@
+[
+  {
+    "id": "eval-001",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "breakfast",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["10101", "10102", "10103"]
+  },
+  {
+    "id": "eval-002",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "main-meal",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["24003", "24010", "24015", "24022"]
+  },
+  {
+    "id": "eval-003",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "dinner",
+      "excludeUrls": ["recipe://173567/african-obsession"]
+    },
+    "relevantRecipeIds": ["24003", "31002", "31005"]
+  },
+  {
+    "id": "eval-004",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "dessert",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["40101", "40102", "40103"]
+  },
+  {
+    "id": "eval-005",
+    "input": {
+      "mood": "healthy",
+      "mealType": "breakfast",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["10201", "10202", "10203", "10204"]
+  },
+  {
+    "id": "eval-006",
+    "input": {
+      "mood": "healthy",
+      "mealType": "main-meal",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["20201", "20202", "20203"]
+  },
+  {
+    "id": "eval-007",
+    "input": {
+      "mood": "healthy",
+      "mealType": "dinner",
+      "excludeUrls": ["recipe://136381/african-banana-coconut-bake"]
+    },
+    "relevantRecipeIds": ["30201", "30202", "30203"]
+  },
+  {
+    "id": "eval-008",
+    "input": {
+      "mood": "healthy",
+      "mealType": "dessert",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["40201", "40202"]
+  },
+  {
+    "id": "eval-009",
+    "input": {
+      "mood": "quick",
+      "mealType": "breakfast",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["10301", "10302", "10303"]
+  },
+  {
+    "id": "eval-010",
+    "input": {
+      "mood": "quick",
+      "mealType": "main-meal",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["24003", "20301", "20302"]
+  },
+  {
+    "id": "eval-011",
+    "input": {
+      "mood": "quick",
+      "mealType": "dinner",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["30301", "30302", "30303", "30304"]
+  },
+  {
+    "id": "eval-012",
+    "input": {
+      "mood": "quick",
+      "mealType": "dessert",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["40301", "40302"]
+  },
+  {
+    "id": "eval-013",
+    "input": {
+      "mood": "exotic",
+      "mealType": "breakfast",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["10401", "10402"]
+  },
+  {
+    "id": "eval-014",
+    "input": {
+      "mood": "exotic",
+      "mealType": "main-meal",
+      "excludeUrls": ["recipe://173567/african-obsession"]
+    },
+    "relevantRecipeIds": ["20401", "20402", "20403", "20404"]
+  },
+  {
+    "id": "eval-015",
+    "input": {
+      "mood": "exotic",
+      "mealType": "dinner",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["30401", "30402", "30403"]
+  },
+  {
+    "id": "eval-016",
+    "input": {
+      "mood": "exotic",
+      "mealType": "dessert",
+      "excludeUrls": ["recipe://136381/african-banana-coconut-bake"]
+    },
+    "relevantRecipeIds": ["40401", "40402", "40403"]
+  },
+  {
+    "id": "eval-017",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "breakfast",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["10501", "10502", "10503"]
+  },
+  {
+    "id": "eval-018",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "main-meal",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["24003", "20501", "20502", "20503"]
+  },
+  {
+    "id": "eval-019",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "dinner",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["30501", "30502", "30503"]
+  },
+  {
+    "id": "eval-020",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "dessert",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["40501", "40502"]
+  },
+  {
+    "id": "eval-021",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "dinner",
+      "excludeUrls": [
+        "recipe://173567/african-obsession",
+        "recipe://136381/african-banana-coconut-bake"
+      ]
+    },
+    "relevantRecipeIds": ["24003", "31002", "31010"]
+  },
+  {
+    "id": "eval-022",
+    "input": {
+      "mood": "healthy",
+      "mealType": "breakfast",
+      "excludeUrls": ["recipe://10201/avocado-toast-classic"]
+    },
+    "relevantRecipeIds": ["10202", "10203", "10204"]
+  },
+  {
+    "id": "eval-023",
+    "input": {
+      "mood": "quick",
+      "mealType": "dinner",
+      "excludeUrls": ["recipe://30301/10-min-stir-fry"]
+    },
+    "relevantRecipeIds": ["30302", "30303", "30304"]
+  },
+  {
+    "id": "eval-024",
+    "input": {
+      "mood": "exotic",
+      "mealType": "main-meal",
+      "excludeUrls": []
+    },
+    "relevantRecipeIds": ["20405", "20406", "20407"]
+  },
+  {
+    "id": "eval-025",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "main-meal",
+      "excludeUrls": ["recipe://20501/one-pot-leftovers"]
+    },
+    "relevantRecipeIds": ["24003", "20502", "20504"]
+  },
+  {
+    "id": "eval-026",
+    "input": {
+      "mood": "comfort-food",
+      "mealType": "main-meal",
+      "excludeUrls": ["recipe://24003/potato-chicken-soup"]
+    },
+    "relevantRecipeIds": ["24010", "24015", "24022"]
+  },
+  {
+    "id": "eval-027",
+    "input": {
+      "mood": "healthy",
+      "mealType": "main-meal",
+      "excludeUrls": ["recipe://20201/quinoa-bowl"]
+    },
+    "relevantRecipeIds": ["20202", "20203", "20204"]
+  },
+  {
+    "id": "eval-028",
+    "input": {
+      "mood": "quick",
+      "mealType": "breakfast",
+      "excludeUrls": ["recipe://10301/microwave-omelet"]
+    },
+    "relevantRecipeIds": ["10302", "10303", "10304"]
+  },
+  {
+    "id": "eval-029",
+    "input": {
+      "mood": "exotic",
+      "mealType": "dinner",
+      "excludeUrls": ["recipe://30401/thai-curry"]
+    },
+    "relevantRecipeIds": ["30402", "30403", "30404"]
+  },
+  {
+    "id": "eval-030",
+    "input": {
+      "mood": "fridge-rescue",
+      "mealType": "dinner",
+      "excludeUrls": [
+        "recipe://30501/pantry-pasta",
+        "recipe://30502/frittata-cleanup"
+      ]
+    },
+    "relevantRecipeIds": ["30503", "30504", "30505"]
+  }
+]
