@@ -77,12 +77,14 @@ Once the server is running, interactive OpenAPI / Swagger UI documentation is av
 - **Request Body:**
 ```json
 {
-  "mood": "quick and nutritious",
+  "mood": "comfort-food",
   "mealType": "dinner",
-  "excludeUrls": ["https://example.com/recipe/1"],
+  "excludeUrls": ["recipe://173567/african-obsession", "recipe://136381/african-banana-coconut-bake"],
   "limit": 3
 }
 ```
+- **Allowed `mood` values:** `comfort-food`, `healthy`, `quick`, `exotic`, `fridge-rescue`
+- **Allowed `mealType` values:** `breakfast`, `main-meal`, `dinner`, `dessert`
 - **Response `200 OK`:**
 ```json
 {
