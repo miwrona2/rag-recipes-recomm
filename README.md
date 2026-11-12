@@ -44,7 +44,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 or
 ```bash
-python run.py
+python3 run.py
 ```
 
 ---
@@ -110,3 +110,18 @@ Run unit and integration test suite:
 ```bash
 pytest -v
 ```
+
+---
+
+## 📊 Retrieval Evaluation (Recall@k & Precision@k)
+
+To evaluate vector search retrieval performance across the benchmark dataset:
+```bash
+python3 scripts/evaluate_retrieval.py
+```
+
+Optional CLI parameters:
+- `-d`, `--dataset`: Path to dataset JSON file (default: `app/data/sample.json`)
+- `-k`, `--k-values`: List of $k$ cutoffs to evaluate (default: `3 5 10 20`)
+- `-t`, `--threshold`: Cosine similarity threshold (default: `0.35`)
+- `-o`, `--output`: Optional path to save evaluation results as JSON

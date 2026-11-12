@@ -25,6 +25,13 @@ from app.services.recommendation_validator import (
     validate_and_assemble_recommendations,
     validateAndAssembleRecommendations,
 )
+from app.services.retrieval_evaluation import (
+    calculate_precision_at_k,
+    calculate_recall_at_k,
+    extract_candidate_ids,
+    evaluate_retrieval_dataset,
+    format_evaluation_summary,
+)
 
 __all__ = [
     "RecipeService",
@@ -42,4 +49,9 @@ __all__ = [
     "execute_llm_call",
     "validate_and_assemble_recommendations",
     "validateAndAssembleRecommendations",
+    "calculate_precision_at_k",
+    "calculate_recall_at_k",
+    "extract_candidate_ids",
+    "evaluate_retrieval_dataset",
+    "format_evaluation_summary",
 ]
