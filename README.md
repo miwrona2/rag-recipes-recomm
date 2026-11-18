@@ -4,6 +4,14 @@ A culinary recipe recommendation microservice built with Python and the **FastAP
 
 ---
 
+## 🧭 RAG Architecture
+
+![RAG pipeline architecture](docs/rag-architecture.svg)
+
+*RAG pipeline orchestrated by `RecipeService.generate_recipes_with_rag` (`app/services/recipe_service.py`). Steps ①–⑥ run per request; the **Retrieval Source** (recipe corpus → embeddings → Supabase pgvector) is indexed ahead of time. Highlighted items are the configuration currently used in the pipeline. To regenerate the diagram, run `python3 docs/generate_rag_diagram.py docs/rag-architecture.svg`.*
+
+---
+
 ## 🛠 Requirements
 
 - **Python:** `>= 3.10`
@@ -77,12 +85,14 @@ Once the server is running, interactive OpenAPI / Swagger UI documentation is av
 - **Request Body:**
 ```json
 {
-  "mood": "quick and nutritious",
+  "mood": "comfort-food",
   "mealType": "dinner",
-  "excludeUrls": ["https://example.com/recipe/1"],
+  "excludeUrls": ["recipe://173567/african-obsession", "recipe://136381/african-banana-coconut-bake"],
   "limit": 3
 }
 ```
+- **Allowed `mood` values:** `comfort-food`, `healthy`, `quick`, `exotic`, `fridge-rescue`
+- **Allowed `mealType` values:** `breakfast`, `main-meal`, `dinner`, `dessert`
 - **Response `200 OK`:**
 ```json
 {
