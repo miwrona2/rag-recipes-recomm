@@ -4,6 +4,14 @@ A culinary recipe recommendation microservice built with Python and the **FastAP
 
 ---
 
+## 🧭 RAG Architecture
+
+![RAG pipeline architecture](docs/rag-architecture.svg)
+
+*RAG pipeline orchestrated by `RecipeService.generate_recipes_with_rag` (`app/services/recipe_service.py`). Steps ①–⑥ run per request; the **Retrieval Source** (recipe corpus → embeddings → Supabase pgvector) is indexed ahead of time. Highlighted items are the configuration currently used in the pipeline. To regenerate the diagram, run `python3 docs/generate_rag_diagram.py docs/rag-architecture.svg`.*
+
+---
+
 ## 🛠 Requirements
 
 - **Python:** `>= 3.10`

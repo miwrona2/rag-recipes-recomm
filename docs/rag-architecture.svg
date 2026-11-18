@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1540 1000" width="1540" height="1000" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, 'TeX Gyre Pagella', Georgia, 'DejaVu Serif', serif" fill="#111">
+<defs><marker id="arr111" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker><marker id="arr2e5aa8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e5aa8"/></marker><marker id="arr4f7f2f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4f7f2f"/></marker></defs>
+<rect width="1540" height="1000" fill="#ffffff"/>
+<rect x="40" y="30" width="420" height="170" rx="26" fill="#f8cbad" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="250.0" y="69" font-size="26" font-weight="bold" text-anchor="middle">Response</text>
+<line x1="40" y1="86" x2="460" y2="86" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="70" cy="112" r="3.2" fill="#222"/>
+<text x="86" y="118"  font-size="20">recipes[]  (top-N, enriched)</text>
+<circle cx="70" cy="142" r="3.2" fill="#222"/>
+<text x="86" y="148"  font-size="20">matchScore + reasoning</text>
+<circle cx="70" cy="172" r="3.2" fill="#222"/>
+<text x="86" y="178"  font-size="20">trace: counts, model, timing</text>
+<rect x="40" y="250" width="420" height="230" rx="26" fill="#dde8f6" stroke="#2f4b8c" stroke-width="2.5"/>
+<circle cx="70" cy="280" r="15" fill="#2e5aa8"/>
+<text x="70" y="286.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">6</text>
+<text x="266.0" y="289" font-size="24" font-weight="bold" text-anchor="middle">Validation &amp; Assembly</text>
+<line x1="40" y1="306" x2="460" y2="306" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="70" cy="332" r="3.2" fill="#222"/>
+<text x="86" y="338"  font-size="20">parse JSON response</text>
+<circle cx="70" cy="362" r="3.2" fill="#222"/>
+<text x="86" y="368"  font-size="20">match recipeId / sourceUrl</text>
+<circle cx="70" cy="392" r="3.2" fill="#222"/>
+<text x="86" y="398"  font-size="20" fill="#2e5aa8" font-weight="bold">reject hallucinated recipes</text>
+<circle cx="70" cy="422" r="3.2" fill="#222"/>
+<text x="86" y="428"  font-size="20">deduplicate, normalize scores</text>
+<circle cx="70" cy="452" r="3.2" fill="#222"/>
+<text x="86" y="458"  font-size="20">cap at limit</text>
+<rect x="40" y="530" width="420" height="170" rx="26" fill="#fbe39a" stroke="#c9a227" stroke-width="3.5"/>
+<circle cx="70" cy="560" r="15" fill="#2e5aa8"/>
+<text x="70" y="566.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">5</text>
+<text x="266.0" y="569" font-size="25" font-weight="bold" text-anchor="middle">Large Language Model</text>
+<line x1="40" y1="586" x2="460" y2="586" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="70" cy="612" r="3.2" fill="#222"/>
+<text x="86" y="618"  font-size="20" fill="#2e5aa8" font-weight="bold">OpenAI gpt-4o-mini</text>
+<circle cx="70" cy="642" r="3.2" fill="#222"/>
+<text x="86" y="648"  font-size="20">temperature = 0.3</text>
+<circle cx="70" cy="672" r="3.2" fill="#222"/>
+<text x="86" y="678"  font-size="20">JSON mode (response_format)</text>
+<rect x="40" y="750" width="420" height="200" rx="26" fill="#dde8f6" stroke="#2f4b8c" stroke-width="2.5"/>
+<circle cx="70" cy="780" r="15" fill="#2e5aa8"/>
+<text x="70" y="786.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+<text x="266.0" y="789" font-size="26" font-weight="bold" text-anchor="middle">Prompting</text>
+<line x1="40" y1="806" x2="460" y2="806" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="70" cy="832" r="3.2" fill="#222"/>
+<text x="86" y="838"  font-size="20">system: rules + JSON schema</text>
+<circle cx="70" cy="862" r="3.2" fill="#222"/>
+<text x="86" y="868"  font-size="20" fill="#2e5aa8" font-weight="bold">select ONLY from candidates</text>
+<circle cx="70" cy="892" r="3.2" fill="#222"/>
+<text x="86" y="898"  font-size="20">user: mood, mealType</text>
+<circle cx="70" cy="922" r="3.2" fill="#222"/>
+<text x="86" y="928"  font-size="20">user: candidate list (JSON)</text>
+<rect x="540" y="30" width="420" height="200" rx="26" fill="#f8cbad" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="750.0" y="69" font-size="26" font-weight="bold" text-anchor="middle">User Request</text>
+<line x1="540" y1="86" x2="960" y2="86" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="570" cy="112" r="3.2" fill="#222"/>
+<text x="586" y="118"  font-family="'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="17">POST /api/v1/recipes/generate</text>
+<circle cx="570" cy="142" r="3.2" fill="#222"/>
+<text x="586" y="148"  font-size="20">mood  (e.g. comfort-food)</text>
+<circle cx="570" cy="172" r="3.2" fill="#222"/>
+<text x="586" y="178"  font-size="20">mealType  (e.g. dinner)</text>
+<circle cx="570" cy="202" r="3.2" fill="#222"/>
+<text x="586" y="208"  font-size="20">excludeUrls, limit (= 3)</text>
+<rect x="540" y="280" width="420" height="230" rx="26" fill="#dde8f6" stroke="#2f4b8c" stroke-width="2.5"/>
+<circle cx="570" cy="310" r="15" fill="#2e5aa8"/>
+<text x="570" y="316.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+<text x="766.0" y="319" font-size="26" font-weight="bold" text-anchor="middle">Retrieval</text>
+<line x1="540" y1="336" x2="960" y2="336" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="570" cy="362" r="3.2" fill="#222"/>
+<text x="586" y="368"  font-size="20">query = &quot;{mood} {mealType}&quot;</text>
+<circle cx="570" cy="392" r="3.2" fill="#222"/>
+<text x="586" y="398"  font-size="20">query embedding</text>
+<circle cx="570" cy="422" r="3.2" fill="#222"/>
+<text x="586" y="428"  font-size="20">cosine similarity ≥ 0.35</text>
+<circle cx="570" cy="452" r="3.2" fill="#222"/>
+<text x="586" y="458"  font-size="20" fill="#2e5aa8" font-weight="bold">top-k = 20 candidates</text>
+<circle cx="570" cy="482" r="3.2" fill="#222"/>
+<text x="586" y="488"  font-size="20">mood / mealType tag filter</text>
+<rect x="540" y="560" width="420" height="140" rx="26" fill="#dde8f6" stroke="#2f4b8c" stroke-width="2.5"/>
+<circle cx="570" cy="590" r="15" fill="#2e5aa8"/>
+<text x="570" y="596.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">2</text>
+<text x="766.0" y="599" font-size="26" font-weight="bold" text-anchor="middle">Filtering</text>
+<line x1="540" y1="616" x2="960" y2="616" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="570" cy="642" r="3.2" fill="#222"/>
+<text x="586" y="648"  font-size="20">drop excludeUrls</text>
+<circle cx="570" cy="672" r="3.2" fill="#222"/>
+<text x="586" y="678"  font-size="20">by url · recipe://id/slug · id</text>
+<rect x="540" y="750" width="420" height="170" rx="26" fill="#dde8f6" stroke="#2f4b8c" stroke-width="2.5"/>
+<circle cx="570" cy="780" r="15" fill="#2e5aa8"/>
+<text x="570" y="786.5" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+<text x="766.0" y="789" font-size="26" font-weight="bold" text-anchor="middle">Augmentation</text>
+<line x1="540" y1="806" x2="960" y2="806" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="570" cy="832" r="3.2" fill="#222"/>
+<text x="586" y="838"  font-size="20" fill="#2e5aa8" font-weight="bold">top-10 → concise context</text>
+<circle cx="570" cy="862" r="3.2" fill="#222"/>
+<text x="586" y="868"  font-size="20">candidates_map</text>
+<circle cx="570" cy="892" r="3.2" fill="#222"/>
+<text x="586" y="898"  font-size="20">(id / url → full record)</text>
+<rect x="1065" y="30" width="420" height="170" rx="26" fill="#c5e0b4" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="1275.0" y="69" font-size="24" font-weight="bold" text-anchor="middle">Retrieval Evaluation</text>
+<line x1="1065" y1="86" x2="1485" y2="86" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="1095" cy="112" r="3.2" fill="#222"/>
+<text x="1111" y="118"  font-size="20">Recall@k, Precision@k</text>
+<circle cx="1095" cy="142" r="3.2" fill="#222"/>
+<text x="1111" y="148"  font-size="20">k ∈ {3, 5, 10, 20}</text>
+<circle cx="1095" cy="172" r="3.2" fill="#222"/>
+<text x="1111" y="178"  font-family="'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="17">benchmark: data/sample.json</text>
+<rect x="1020" y="250" width="505" height="720" fill="none" stroke="#f0b400" stroke-width="3" stroke-dasharray="14 9"/>
+<text x="1510" y="285" font-size="24" fill="#e0a800" text-anchor="end">Retrieval Source</text>
+<rect x="1085" y="310" width="400" height="170" rx="26" fill="#fff2cc" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="1285.0" y="349" font-size="26" font-weight="bold" text-anchor="middle">Recipe Corpus</text>
+<line x1="1085" y1="366" x2="1485" y2="366" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="1115" cy="392" r="3.2" fill="#222"/>
+<text x="1131" y="398"  font-size="20">food-recipes-15k</text>
+<circle cx="1115" cy="422" r="3.2" fill="#222"/>
+<text x="1131" y="428"  font-size="20">(Hugging Face dataset)</text>
+<circle cx="1115" cy="452" r="3.2" fill="#222"/>
+<text x="1131" y="458"  font-size="20">title, ingredients, steps, tags</text>
+<g transform="translate(1105 326) scale(0.5)">
+<rect x="14" y="-14" width="54" height="68" rx="7" fill="#fff" stroke="#555" stroke-width="4"/>
+<rect x="0" y="0" width="54" height="68" rx="7" fill="#fff" stroke="#555" stroke-width="4"/>
+<line x1="11" y1="18" x2="43" y2="18" stroke="#555" stroke-width="4"/>
+<line x1="11" y1="30" x2="43" y2="30" stroke="#555" stroke-width="4"/>
+<line x1="11" y1="42" x2="43" y2="42" stroke="#555" stroke-width="4"/>
+<line x1="11" y1="54" x2="43" y2="54" stroke="#555" stroke-width="4"/>
+</g>
+<rect x="1085" y="530" width="400" height="140" rx="26" fill="#fff2cc" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="1285.0" y="569" font-size="26" font-weight="bold" text-anchor="middle">Embedding</text>
+<line x1="1085" y1="586" x2="1485" y2="586" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="1115" cy="612" r="3.2" fill="#222"/>
+<text x="1131" y="618"  font-size="20" fill="#2e5aa8" font-weight="bold">text-embedding-3-small</text>
+<circle cx="1115" cy="642" r="3.2" fill="#222"/>
+<text x="1131" y="648"  font-size="20">corpus + query (same model)</text>
+<rect x="1085" y="720" width="400" height="200" rx="26" fill="#fff2cc" stroke="#2f4b8c" stroke-width="2.5"/>
+<text x="1285.0" y="759" font-size="26" font-weight="bold" text-anchor="middle">Vector Database</text>
+<line x1="1085" y1="776" x2="1485" y2="776" stroke="#333" stroke-width="1.4" stroke-dasharray="7 5"/>
+<circle cx="1115" cy="802" r="3.2" fill="#222"/>
+<text x="1131" y="808"  font-size="20" fill="#2e5aa8" font-weight="bold">Supabase + pgvector</text>
+<circle cx="1115" cy="832" r="3.2" fill="#222"/>
+<text x="1131" y="838"  font-family="'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="17">RPC match_recipes</text>
+<circle cx="1115" cy="862" r="3.2" fill="#222"/>
+<text x="1131" y="868"  font-size="20">match_threshold = 0.35</text>
+<circle cx="1115" cy="892" r="3.2" fill="#222"/>
+<text x="1131" y="898"  font-size="20">match_count = 20</text>
+<path d="M1061,760 v14 a28,9 0 0 0 56,0 v-14" fill="#fff" stroke="#333" stroke-width="3"/>
+<path d="M1061,744 v14 a28,9 0 0 0 56,0 v-14" fill="#fff" stroke="#333" stroke-width="3"/>
+<path d="M1061,728 v14 a28,9 0 0 0 56,0 v-14" fill="#fff" stroke="#333" stroke-width="3"/>
+<ellipse cx="1089" cy="728" rx="28" ry="9" fill="#fff" stroke="#333" stroke-width="3"/>
+<polyline points="750.0,230 750.0,278" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="750.0,510 750.0,558" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="750.0,700 750.0,748" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="540,850 462,850" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="250.0,750 250.0,702" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="250.0,530 250.0,482" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="250.0,250 250.0,202" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="540,790 500,790 500,380 462,380" fill="none" stroke="#2e5aa8" stroke-width="2.2" stroke-dasharray="8 6" marker-end="url(#arr2e5aa8)"/>
+<text x="488" y="600" font-size="16" font-style="italic" fill="#2e5aa8" text-anchor="middle" transform="rotate(-90 488 600)">candidates_map</text>
+<polyline points="960,360 1018,360" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<text x="990" y="352" font-size="15" font-style="italic" fill="#444" text-anchor="middle">query</text>
+<polyline points="1020,440 962,440" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<text x="990" y="462" font-size="15" font-style="italic" fill="#444" text-anchor="middle">top-20</text>
+<polyline points="1285.0,480 1285.0,528" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="1285.0,670 1285.0,718" fill="none" stroke="#111" stroke-width="2.2" marker-end="url(#arr111)"/>
+<polyline points="1065,115 990,115 990,300 962,300" fill="none" stroke="#4f7f2f" stroke-width="2.2" stroke-dasharray="8 6" marker-end="url(#arr4f7f2f)"/>
+<text x="1000" y="210" font-size="15" font-style="italic" fill="#4f7f2f" text-anchor="start">offline</text>
+</svg>
