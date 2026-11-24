@@ -88,15 +88,39 @@ Once the server is running, interactive OpenAPI / Swagger UI documentation is av
   "mood": "comfort-food",
   "mealType": "dinner",
   "excludeUrls": ["recipe://173567/african-obsession", "recipe://136381/african-banana-coconut-bake"],
-  "limit": 3
+  "limit": 3,
+  "query": "szybki makaron z kurczakiem"
 }
 ```
 - **Allowed `mood` values:** `comfort-food`, `healthy`, `quick`, `exotic`, `fridge-rescue`
 - **Allowed `mealType` values:** `breakfast`, `main-meal`, `dinner`, `dessert`
+- **`query` (optional, max 200 chars):** free-text description of what the user wants, in any language. It complements the tiles, it doesn't replace them. Omit it (or send an empty string) to get the tile-only behaviour. When present, **Step 0 (query understanding)** runs before retrieval:
+  - the LLM translates the query into an English `semanticQuery` (the dataset is in English), which leads the embedded search text: `"<semanticQuery> (<mood> <mealType>)"`;
+  - if the text explicitly maps to allowed `mood` / `mealType` values, those tags are merged with the tile values (tile first). Filtering matches **any** of the merged tags;
+  - anything outside the tag lists (e.g. `keto`, `high-protein`, `like KFC`) stays in `semanticQuery` and is handled by vector search only;
+  - if the LLM fails, the raw query is used as `semanticQuery` with no extra tags (`source: "fallback"`).
+- **`parsedQuery` (optional):** a ready-made Step 0 result, e.g. stored with a suggestion in the Node.js middleware DB. When set, the LLM parse is skipped (`source: "precomputed"`). Send it only when the user submitted the suggestion unedited; otherwise send just `query`. Tags outside the allowed lists are dropped.
+  ```json
+  {
+    "mood": "comfort-food",
+    "mealType": "dinner",
+    "query": "szybki makaron z kurczakiem",
+    "parsedQuery": { "semanticQuery": "quick chicken pasta", "moodTags": ["quick"], "mealTypeTags": [] }
+  }
+  ```
 - **Response `200 OK`:**
 ```json
 {
   "recipes": [],
+  "queryUnderstanding": {
+    "originalQuery": "szybki makaron z kurczakiem",
+    "semanticQuery": "quick chicken pasta",
+    "moodTags": ["quick"],
+    "mealTypeTags": [],
+    "effectiveMoods": ["comfort-food", "quick"],
+    "effectiveMealTypes": ["dinner"],
+    "source": "llm"
+  },
   "trace": {
     "retrievedCandidatesCount": 0,
     "filteredCandidatesCount": 0,
@@ -110,7 +134,9 @@ Once the server is running, interactive OpenAPI / Swagger UI documentation is av
 }
 ```
 - **Validation Error `422 Unprocessable Entity`:**
-Returned automatically when required fields (`mood`, `mealType`) are missing or parameter values are invalid (`limit` < 1).
+Returned automatically when required fields (`mood`, `mealType`) are missing or parameter values are invalid (`limit` < 1, `query` longer than 200 characters).
+
+`queryUnderstanding` is `null` when no `query` was sent.
 
 ---
 
