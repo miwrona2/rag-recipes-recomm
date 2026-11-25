@@ -10,7 +10,10 @@ from app.models.recipe import (
     RecipeGenerationResponse,
     RecipeCandidate,
     GenerationTrace,
+    QueryUnderstanding,
 )
+from app.core.tags import merge_tags
+from app.services.query_parser import ParsedQuery, fallback_parse, parse_user_query
 from app.services.vector_search import retrieve_candidates
 from app.services.candidate_filter import filter_excluded_candidates
 from app.services.prompt_context import prepare_prompt_context
@@ -32,7 +35,9 @@ class RecipeService:
         prompt_builder_fn: Optional[Callable[..., Any]] = None,
         llm_fn: Optional[Callable[..., Any]] = None,
         validator_fn: Optional[Callable[..., Any]] = None,
+        query_parser_fn: Optional[Callable[..., Any]] = None,
     ):
+        self.query_parser_fn = query_parser_fn
         self.settings = settings
         self.search_fn = search_fn
         self.embedding_fn = embedding_fn
@@ -52,9 +57,12 @@ class RecipeService:
         prompt_builder_fn: Optional[Callable[..., Any]] = None,
         llm_fn: Optional[Callable[..., Any]] = None,
         validator_fn: Optional[Callable[..., Any]] = None,
+        query_parser_fn: Optional[Callable[..., Any]] = None,
     ) -> RecipeGenerationResponse:
         """
         Execute RAG recipe recommendation pipeline.
+        Step 0: (only when request.query is set) Query understanding - LLM parses free text into
+                an English semantic query + mood/mealType tags merged with the tile selection.
         Step 1: Candidate retrieval from vector database.
         Step 2: Filtering excluded candidates.
         Step 3: Preparing concise prompt context and candidate lookup map.
@@ -74,6 +82,49 @@ class RecipeService:
         effective_prompt_builder_fn = prompt_builder_fn or self.prompt_builder_fn or build_rag_prompts
         effective_llm_fn = llm_fn or self.llm_fn
         effective_validator_fn = validator_fn or self.validator_fn
+        effective_query_parser_fn = query_parser_fn or self.query_parser_fn
+
+        # Step 0: Query understanding (optional free-text query)
+        parsed_query: Optional[ParsedQuery] = None
+        query_understanding: Optional[QueryUnderstanding] = None
+        effective_moods = merge_tags(request.mood, None)
+        effective_meal_types = merge_tags(request.mealType, None)
+        if request.query or request.parsedQuery:
+            logger.info(
+                f"[USER_QUERY] mood='{request.mood}' mealType='{request.mealType}' query='{request.query}' "
+                f"precomputed={request.parsedQuery is not None}"
+            )
+            if request.parsedQuery:
+                parsed_query = ParsedQuery(
+                    original_query=request.query or request.parsedQuery.semanticQuery,
+                    semantic_query=request.parsedQuery.semanticQuery,
+                    mood_tags=request.parsedQuery.moodTags,
+                    meal_type_tags=request.parsedQuery.mealTypeTags,
+                    source="precomputed",
+                )
+            elif effective_query_parser_fn:
+                try:
+                    parsed_query = await effective_query_parser_fn(request.query)
+                except Exception as e:
+                    logger.error(f"[QUERY_PARSER_ERROR] Błąd podczas rozbioru zapytania: {e}")
+            if parsed_query is None:
+                parsed_query = fallback_parse(request.query)
+
+            effective_moods = merge_tags(request.mood, parsed_query.mood_tags)
+            effective_meal_types = merge_tags(request.mealType, parsed_query.meal_type_tags)
+            query_understanding = QueryUnderstanding(
+                originalQuery=parsed_query.original_query,
+                semanticQuery=parsed_query.semantic_query,
+                moodTags=parsed_query.mood_tags,
+                mealTypeTags=parsed_query.meal_type_tags,
+                effectiveMoods=effective_moods,
+                effectiveMealTypes=effective_meal_types,
+                source=parsed_query.source,
+            )
+            logger.info(
+                f"[QUERY_PARSER] semantic_query='{parsed_query.semantic_query}' "
+                f"moods={effective_moods} mealTypes={effective_meal_types} source={parsed_query.source}"
+            )
 
         retrieved_candidates = []
         if effective_search_fn or (
@@ -87,6 +138,9 @@ class RecipeService:
                     match_threshold=0.35,
                     search_fn=effective_search_fn,
                     embedding_fn=effective_embedding_fn,
+                    semantic_query=parsed_query.semantic_query if parsed_query else None,
+                    mood_tags=effective_moods if parsed_query else None,
+                    meal_type_tags=effective_meal_types if parsed_query else None,
                 )
             except Exception as e:
                 logger.error(f"[RAG_RETRIEVAL_ERROR] Błąd podczas pobierania kandydatów: {e}")
@@ -110,6 +164,7 @@ class RecipeService:
             meal_type=request.mealType,
             candidates_for_prompt=prompt_context.candidates_for_prompt,
             limit=request.limit,
+            **({"user_query": parsed_query.original_query} if parsed_query else {}),
         )
 
         # Step 5: Generation - execute LLM call if candidates exist and llm_fn is configured
@@ -199,11 +254,14 @@ class RecipeService:
                 "userPromptLength": len(prompts.user_prompt) if prompts else 0,
                 "rawLlmResponseLength": len(raw_llm_response) if raw_llm_response else 0,
                 "validatedRecipesCount": len(validated_recipes),
+                "queryProvided": bool(request.query or request.parsedQuery),
+                "queryParserSource": parsed_query.source if parsed_query else None,
             },
         )
 
         return RecipeGenerationResponse(
             recipes=recipes,
+            queryUnderstanding=query_understanding,
             trace=trace,
         )
 
@@ -212,8 +270,18 @@ class RecipeService:
 
 
 def get_recipe_service() -> RecipeService:
+    settings = get_settings()
+
+    async def _parse_query(query: str) -> ParsedQuery:
+        return await parse_user_query(
+            query,
+            llm_fn=execute_llm_call if settings.OPENAI_API_KEY else None,
+            model=settings.OPENAI_MODEL,
+        )
+
     return RecipeService(
-        settings=get_settings(),
+        settings=settings,
         llm_fn=execute_llm_call,
         validator_fn=validate_and_assemble_recommendations,
+        query_parser_fn=_parse_query,
     )

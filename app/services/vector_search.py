@@ -29,12 +29,38 @@ def get_supabase_client(
     return create_client(url, key)
 
 
+def _as_targets(value: Optional[Union[str, List[str]]]) -> List[str]:
+    if not value:
+        return []
+    values = [value] if isinstance(value, str) else value
+    return [str(v).lower() for v in values if str(v).strip()]
+
+
+def _matches_tags(
+    recipe: Dict[str, Any],
+    targets: Optional[Union[str, List[str]]],
+    keys: tuple,
+) -> bool:
+    target_list = _as_targets(targets)
+    if not target_list:
+        return True
+    tags = None
+    for key in keys:
+        tags = recipe.get(key)
+        if tags:
+            break
+    if not tags:
+        return True
+    tag_list = [str(t).lower() for t in tags] if isinstance(tags, list) else [str(tags).lower()]
+    return any(target in tag for target in target_list for tag in tag_list)
+
+
 async def search_recipes_in_vector_db(
     query: Union[str, List[str]],
     match_count: int = 20,
     match_threshold: float = 0.35,
-    mood: Optional[str] = None,
-    meal_type: Optional[str] = None,
+    mood: Optional[Union[str, List[str]]] = None,
+    meal_type: Optional[Union[str, List[str]]] = None,
     embedding: Optional[List[float]] = None,
     embedding_fn: Optional[Callable[..., Any]] = None,
     supabase_client: Optional[Client] = None,
@@ -47,8 +73,8 @@ async def search_recipes_in_vector_db(
     :param query: Search query text or list of query strings/ingredients.
     :param match_count: Maximum number of candidate recipes to retrieve.
     :param match_threshold: Cosine similarity threshold (0.0 to 1.0).
-    :param mood: Optional mood tag filter.
-    :param meal_type: Optional meal type tag filter.
+    :param mood: Optional mood tag filter (string or list - any match).
+    :param meal_type: Optional meal type tag filter (string or list - any match).
     :param embedding: Optional precomputed embedding vector.
     :param embedding_fn: Optional embedding generator function (defaults to get_embedding).
     :param supabase_client: Optional Supabase client instance.
@@ -106,36 +132,11 @@ async def search_recipes_in_vector_db(
 
     results: List[Dict[str, Any]] = response.data if response and response.data else []
 
-    # 4. Optional tag filtering (mood, mealType)
-    if mood:
-        target_mood = mood.lower()
-
-        def _matches_mood(recipe: Dict[str, Any]) -> bool:
-            mood_tags = recipe.get("mood_tags") or recipe.get("mood")
-            if not mood_tags:
-                return True
-            if isinstance(mood_tags, list):
-                return any(target_mood in str(t).lower() for t in mood_tags)
-            return target_mood in str(mood_tags).lower()
-
-        results = [r for r in results if _matches_mood(r)]
-
-    if meal_type:
-        target_meal_type = meal_type.lower()
-
-        def _matches_meal_type(recipe: Dict[str, Any]) -> bool:
-            meal_type_tags = (
-                recipe.get("meal_type_tags")
-                or recipe.get("meal_type")
-                or recipe.get("mealType")
-            )
-            if not meal_type_tags:
-                return True
-            if isinstance(meal_type_tags, list):
-                return any(target_meal_type in str(t).lower() for t in meal_type_tags)
-            return target_meal_type in str(meal_type_tags).lower()
-
-        results = [r for r in results if _matches_meal_type(r)]
+    # 4. Optional tag filtering (mood, mealType); a list means "matches any of these tags"
+    results = [r for r in results if _matches_tags(r, mood, ("mood_tags", "mood"))]
+    results = [
+        r for r in results if _matches_tags(r, meal_type, ("meal_type_tags", "meal_type", "mealType"))
+    ]
 
     return results
 
@@ -149,6 +150,9 @@ async def retrieve_candidates(
     embedding_fn: Optional[Callable[..., Any]] = None,
     embedding: Optional[List[float]] = None,
     search_fn: Optional[Callable[..., Any]] = None,
+    semantic_query: Optional[str] = None,
+    mood_tags: Optional[List[str]] = None,
+    meal_type_tags: Optional[List[str]] = None,
     **kwargs: Any,
 ) -> List[Dict[str, Any]]:
     """
@@ -162,9 +166,13 @@ async def retrieve_candidates(
     :param embedding_fn: Optional embedding generator function.
     :param embedding: Optional precomputed embedding vector.
     :param search_fn: Optional search function (defaults to search_recipes_in_vector_db).
+    :param semantic_query: Optional English query from Step 0; when set it leads the embedded text.
+    :param mood_tags: Optional merged mood tags (tile + query) used for filtering instead of `mood`.
+    :param meal_type_tags: Optional merged meal type tags used for filtering instead of `meal_type`.
     :return: List of candidate recipe dictionaries.
     """
-    query = f"{mood} {meal_type}"
+    tile_query = f"{mood} {meal_type}"
+    query = f"{semantic_query} ({tile_query})" if semantic_query else tile_query
     search = search_fn or search_recipes_in_vector_db
 
     try:
@@ -172,8 +180,8 @@ async def retrieve_candidates(
             query=query,
             match_count=match_count,
             match_threshold=match_threshold,
-            mood=mood,
-            meal_type=meal_type,
+            mood=mood_tags if mood_tags else mood,
+            meal_type=meal_type_tags if meal_type_tags else meal_type,
             supabase_client=supabase_client,
             embedding_fn=embedding_fn,
             embedding=embedding,
